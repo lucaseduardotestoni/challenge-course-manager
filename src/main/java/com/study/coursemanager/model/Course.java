@@ -11,12 +11,10 @@ import java.util.Objects;
 @Entity
 @Table (name = "tb_courses")
 public class Course {
-    @Id
-    private Long id;
-
     @Column(unique = true)
     @Pattern(regexp = "^[a-z]+(?:-[a-z]+)*$")
     @Size(min = 4, max = 10)
+    @Id
     private String code;
     private String name;
     private String description;
@@ -33,6 +31,8 @@ public class Course {
     public Course(String code, String name, String description, User instructor) {
         this.code = code;
         this.name = name;
+        this.status = CourseStatus.ACTIVE;
+        this.inactiveAt = null;
         this.description = description;
         this.instructor = instructor;
     }

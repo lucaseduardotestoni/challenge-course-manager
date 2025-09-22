@@ -1,5 +1,6 @@
 package com.study.coursemanager.controller;
 
+import com.study.coursemanager.dto.CourseDTO;
 import com.study.coursemanager.model.Course;
 import com.study.coursemanager.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ public class CourseController {
     CourseService courseService;
 
     @PostMapping(value = "new")
-    public ResponseEntity<Course> newCourse(@RequestBody Course course) {
-        Course novoCourse = courseService.saveCourse(course);
+    public ResponseEntity<Course> newCourse(@RequestBody CourseDTO courseDTO) {
+        Course novoCourse = courseService.saveCourse(courseDTO);
         return ResponseEntity.ok(novoCourse);
     }
 

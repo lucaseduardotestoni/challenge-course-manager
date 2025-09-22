@@ -1,4 +1,4 @@
-package com.study.coursemanager.controller.exeptions;
+package com.study.coursemanager.dto;
 
 import com.study.coursemanager.model.Role;
 import jakarta.validation.constraints.NotNull;

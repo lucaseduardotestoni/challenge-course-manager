@@ -1,6 +1,7 @@
 package com.study.coursemanager.controller.exeptions;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.study.coursemanager.services.exeptions.BusinessException;
 import com.study.coursemanager.services.exeptions.InvalidUserDataExeption;
 import com.study.coursemanager.services.exeptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,6 +74,20 @@ public class ControllerExeptionHandler {
                 request.getRequestURI()
         );
 
+        return ResponseEntity.status(status).body(standardError);
+    }
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<StandardError> handleBusinessException(BusinessException ex , HttpServletRequest request) {
+        String error = "Invalid parameters";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        StandardError standardError = new StandardError(
+                Instant.now(),
+                status.value(),
+                error,
+                ex.getMessage(),
+                request.getRequestURI()
+        );
         return ResponseEntity.status(status).body(standardError);
     }
 

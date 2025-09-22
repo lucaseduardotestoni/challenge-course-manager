@@ -1,23 +1,39 @@
 package com.study.coursemanager.dto;
 
-public class UserCreateDTO {
-    private String username;
+import com.study.coursemanager.model.Role;
+import com.study.coursemanager.model.User;
+import jakarta.validation.constraints.NotBlank;
+
+public class UserDTO {
+    @NotBlank
+    private String name;
+    @NotBlank
     private String email;
 
-    public UserCreateDTO() {
+    private Role role;
+
+    public UserDTO() {
     }
 
-    public UserCreateDTO(String username, String email) {
-        this.username = username;
+    public UserDTO(String name, String email) {
+        this.name = name;
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
+    public UserDTO(User user) {
+        this.name = user.getname();
+        this.email = user.getEmail();
+        this.role = user.getRole();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Role getRole() { return role; }
+
+    public String getname() {
+        return name;
+    }
+
+    public void setName(String username) {
+        this.name = username;
     }
 
     public String getEmail() {

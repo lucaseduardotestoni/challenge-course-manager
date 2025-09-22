@@ -20,6 +20,8 @@ public class Registration {
     @Column(nullable = false)
     private LocalDateTime enrolledAt;
 
-    public Registration(){}
+    public Registration(){
+
+    }
 
 }

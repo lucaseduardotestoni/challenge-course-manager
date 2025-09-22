@@ -25,17 +25,10 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String email, Role role) {
+    public User(String name, String email) {
         this.name = name;
         this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.role = Role.STUDENT;
     }
 
     public String getEmail() {
@@ -52,5 +45,9 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public String getname() {
+        return name;
     }
 }
