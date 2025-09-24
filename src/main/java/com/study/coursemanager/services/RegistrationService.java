@@ -1,19 +1,23 @@
 package com.study.coursemanager.services;
 
+import com.study.coursemanager.dto.CourseEnrollmentDTO;
 import com.study.coursemanager.dto.RegistrationDTO;
 import com.study.coursemanager.model.Course;
 import com.study.coursemanager.model.Registration;
 import com.study.coursemanager.model.User;
 import com.study.coursemanager.repositories.CourseRepository;
+import com.study.coursemanager.repositories.RegistrationJdbcRepository;
 import com.study.coursemanager.repositories.RegistrationRepository;
 import com.study.coursemanager.repositories.UserRepository;
 import com.study.coursemanager.services.exeptions.BusinessException;
 import com.study.coursemanager.services.exeptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RegistrationService {
@@ -23,6 +27,8 @@ public class RegistrationService {
     CourseRepository courseRepository ;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RegistrationJdbcRepository registrationJdbcRepository;
 
     @Transactional
     public Registration saveRegistration(RegistrationDTO registrationDTO) {
@@ -43,5 +49,8 @@ public class RegistrationService {
         registrationNew.setEnrollment_date(LocalDateTime.now());
 
         return registrationRepository.save(registrationNew);
+    }
+    public List<CourseEnrollmentDTO> getMostEnrolledCourses(int limit) {
+        return registrationJdbcRepository.findMostEnrolledCourses(limit);
     }
 }

@@ -1,15 +1,15 @@
 package com.study.coursemanager.controller;
 
+import com.study.coursemanager.dto.CourseEnrollmentDTO;
 import com.study.coursemanager.dto.RegistrationDTO;
 import com.study.coursemanager.model.Registration;
 import com.study.coursemanager.services.RegistrationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/registration")
@@ -22,5 +22,9 @@ public class RegistrationController {
         Registration registration = registrationService.saveRegistration(registrationDTO);
         return ResponseEntity.ok(registration);
     }
-
+    @GetMapping(value = "/report")
+    public ResponseEntity<List<CourseEnrollmentDTO>> getMostEnrolledCourses(
+            @RequestParam(defaultValue = "5") int limit) {
+        return ResponseEntity.ok(registrationService.getMostEnrolledCourses(limit));
+    }
 }
