@@ -1,5 +1,6 @@
 package com.study.coursemanager.model;
 
+import com.study.coursemanager.model.enums.Role;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -25,10 +26,10 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email) {
+    public User(String name, String email, Role role) {
         this.name = name;
         this.email = email;
-        this.role = Role.STUDENT;
+        this.role = role;
     }
 
     public String getEmail() {
@@ -47,7 +48,7 @@ public class User {
         return id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 }

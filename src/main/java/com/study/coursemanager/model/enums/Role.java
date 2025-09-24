@@ -1,4 +1,4 @@
-package com.study.coursemanager.model;
+package com.study.coursemanager.model.enums;
 
 public enum Role {
     STUDENT,

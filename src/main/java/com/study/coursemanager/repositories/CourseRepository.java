@@ -5,11 +5,14 @@ import com.study.coursemanager.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    Course findByCode(String code);
+
+    Optional<Course> findByCode(String code);
 
     boolean existsByCode(String code);
 
-    void findByInstructor(User instructor);
+    Optional<Course> findByCodeAndStatusFalse(String code);
 }

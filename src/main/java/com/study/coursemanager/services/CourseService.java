@@ -2,82 +2,72 @@ package com.study.coursemanager.services;
 
 import com.study.coursemanager.dto.CourseDTO;
 import com.study.coursemanager.model.Course;
-import com.study.coursemanager.model.CourseStatus;
-import com.study.coursemanager.model.Role;
+import com.study.coursemanager.model.enums.CourseStatus;
+import com.study.coursemanager.model.enums.Role;
 import com.study.coursemanager.model.User;
 import com.study.coursemanager.repositories.CourseRepository;
 import com.study.coursemanager.repositories.UserRepository;
 import com.study.coursemanager.services.exeptions.BusinessException;
+import com.study.coursemanager.services.exeptions.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class CourseService {
     @Autowired
     CourseRepository courseRepository;
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
-    public Course findByCode(String code) {
-        return courseRepository.findByCode(code);
-    }
-
+    @Transactional
     public Course saveCourse(CourseDTO course) {
         validateCode(course.getCode());
-        validateInstructor(course.getInstructorId());
 
         User instructor = userRepository.findById(course.getInstructorId())
-                .orElseThrow(() -> new BusinessException("Instrutor não encontrado com ID: " + course.getInstructorId()));
-
-        if (instructor.getRole() != Role.INSTRUCTOR) {
-            throw new BusinessException("Usuário não tem permissão de instrutor");
-        }
+                .filter(u -> u.getRole() == Role.INSTRUCTOR)
+                .orElseThrow(() -> new BusinessException("Instructor not found or invalid"));
 
         Course newCourse = new Course(
                 course.getCode(),
                 course.getName(),
                 course.getDescription(),
-                instructor
+                instructor,
+                LocalDateTime.now()
         );
         return courseRepository.save(newCourse);
     }
 
-    private void validateInstructor(Long instructorId) {
-        if (instructorId == null) {
-            throw new BusinessException("Instrutor não informado");
-        }
-    }
-
+    @Transactional
     public Course inactiveCourse(String code) {
-        Course entity = Optional.ofNullable(courseRepository.findByCode(code))
-                .orElseThrow(() -> new BusinessException("Curso não encontrado"));
+        Course entity = courseRepository.findByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException(code));
 
             if (entity.getStatus() == CourseStatus.INACTIVE) {
-                throw new BusinessException("Curso já está inativo");
+                throw new BusinessException("Course is already inactive");
             }
             entity.setStatus(CourseStatus.INACTIVE);
-            entity.setInactiveAt(LocalDateTime.now());
+            entity.setInactivation_date(LocalDateTime.now());
             return courseRepository.save(entity);
     }
 
     private void validateCode(String code) {
         if (code == null || code.isEmpty()) {
-            throw new BusinessException("O código não pode ser nulo ou vazio");
+            throw new BusinessException("The code not is null or empty");
         }
 
         if (!code.matches("^[a-z]+(?:-[a-z]+)*$")) {
-            throw new BusinessException("O código deve conter apenas letras minúsculas e hífens");
+            throw new BusinessException("The code must be lowercase and can contain hyphens");
         }
 
         if (code.length() < 4 || code.length() > 10) {
-            throw new BusinessException("O código deve ter entre 4 e 10 caracteres");
+            throw new BusinessException("The code must be between 4 and 10 characters");
         }
 
         if (courseRepository.existsByCode(code)) {
-            throw new BusinessException("Já existe um curso com este código");
+            throw new BusinessException("This alerady exists course code" );
         }
     }
 }

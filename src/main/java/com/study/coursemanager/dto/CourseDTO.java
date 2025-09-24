@@ -6,14 +6,13 @@ import jakarta.validation.constraints.Size;
 
 public class CourseDTO {
 
-    @NotBlank(message = "O nome é obrigatório")
+    @NotBlank
     private String name;
 
-    @NotBlank(message = "O código é obrigatório")
-    @Pattern(regexp = "^[a-z]+(?:-[a-z]+)*$", message = "O código deve estar no formato correto")
-    @Size(min = 4, max = 10, message = "O código deve ter entre 4 e 10 caracteres")
+    @NotBlank
+    @Pattern(regexp = "^[a-z]+(?:-[a-z]+)*$")
+    @Size(min = 4, max = 10)
     private String code;
-
 
     private Long instructorId;
 

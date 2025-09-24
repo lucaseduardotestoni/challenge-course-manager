@@ -1,5 +1,6 @@
 package com.study.coursemanager.model;
 
+import com.study.coursemanager.model.enums.CourseStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -11,30 +12,41 @@ import java.util.Objects;
 @Entity
 @Table (name = "tb_courses")
 public class Course {
-    @Column(unique = true)
+
+    @Id
+    @Column(length = 10)
     @Pattern(regexp = "^[a-z]+(?:-[a-z]+)*$")
     @Size(min = 4, max = 10)
-    @Id
     private String code;
+
     private String name;
+
     private String description;
     @ManyToOne
     private User instructor;
-    private CourseStatus status;
-    private LocalDateTime inactiveAt;
 
-    public Course(){
-        this.status = CourseStatus.ACTIVE;
-        this.inactiveAt = null;
+    @Enumerated(EnumType.STRING)
+    private CourseStatus status;
+
+    private LocalDateTime inactivation_date;
+
+    private LocalDateTime creation_date ;
+
+    public LocalDateTime getCreation_date() {
+        return creation_date;
     }
 
-    public Course(String code, String name, String description, User instructor) {
+    public Course(){
+    }
+
+    public Course(String code, String name, String description, User instructor, LocalDateTime creation_date) {
         this.code = code;
         this.name = name;
         this.status = CourseStatus.ACTIVE;
-        this.inactiveAt = null;
+        this.inactivation_date = null;
         this.description = description;
         this.instructor = instructor;
+        this.creation_date = creation_date;
     }
 
     public String getCode() {
@@ -77,12 +89,12 @@ public class Course {
         this.status = status;
     }
 
-    public LocalDateTime getInactiveAt() {
-        return inactiveAt;
+    public LocalDateTime getInactivation_date() {
+        return inactivation_date;
     }
 
-    public void setInactiveAt(LocalDateTime inactiveAt) {
-        this.inactiveAt = inactiveAt;
+    public void setInactivation_date(LocalDateTime inactivation_date) {
+        this.inactivation_date = inactivation_date;
     }
 
     @Override
